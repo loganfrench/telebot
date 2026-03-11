@@ -10,6 +10,8 @@ type Topic struct {
 	IconColor         int    `json:"icon_color"`
 	IconCustomEmojiID string `json:"icon_custom_emoji_id"`
 	ThreadID          int    `json:"message_thread_id"`
+	// Bot API 9.3: True, if the topic name was set implicitly (unnamed topic)
+	IsNameImplicit    bool   `json:"is_name_implicit,omitempty"`
 }
 
 // CreateTopic creates a topic in a forum supergroup chat.

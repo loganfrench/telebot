@@ -285,6 +285,26 @@ type Message struct {
 	// Message is a service message about a refunded payment, information about the payment.
 	RefundedPayment *RefundedPayment `json:"refunded_payment"`
 
+	// (Optional) Message is a service message about a received regular gift.
+	// Bot API 9.0
+	GiftInfo *GiftInfo `json:"gift,omitempty"`
+
+	// (Optional) Message is a service message about a received unique gift.
+	// Bot API 9.0
+	UniqueGiftInfo *UniqueGiftInfo `json:"unique_gift,omitempty"`
+
+	// (Optional) Service message: the price for paid messages changed.
+	// Bot API 9.0
+	PaidMessagePriceChanged *PaidMessagePriceChanged `json:"paid_message_price_changed,omitempty"`
+
+	// (Optional) Service message: a gift was upgraded to a unique gift.
+	// Bot API 9.3
+	GiftUpgradeSent *UniqueGiftInfo `json:"gift_upgrade_sent,omitempty"`
+
+	// (Optional) Service message: the gift background was set for the chat.
+	// Bot API 9.3
+	GiftBackground *GiftBackground `json:"gift_background_set,omitempty"`
+
 	// For a service message, a user was shared with the bot.
 	UserShared *RecipientShared `json:"users_shared,omitempty"`
 
@@ -328,6 +348,14 @@ type Message struct {
 	// If the sender of the message boosted the chat, the number of boosts
 	// added by the user.
 	SenderBoosts int `json:"sender_boost_count"`
+
+	// (Optional) The number of Telegram Stars that were paid by the sender of the message to send it.
+	// Bot API 9.0
+	PaidStarCount int `json:"paid_star_count,omitempty"`
+
+	// (Optional) True, if the message was sent as a paid post.
+	// Bot API 9.2
+	IsPaidPost bool `json:"is_paid_post,omitempty"`
 
 	// (Optional) Tag or custom title of the sender of the message; for supergroups only.
 	SenderTag string `json:"sender_tag,omitempty"`
@@ -759,4 +787,9 @@ type ReplyParams struct {
 
 	// (Optional) Position of the quote in the original message in UTF-16 code units.
 	QuotePosition int `json:"quote_position"`
+}
+
+// PaidMessagePriceChanged is a service message about a change in the price for direct messages.
+type PaidMessagePriceChanged struct {
+	PaidMessageStarCount int `json:"paid_message_star_count"`
 }

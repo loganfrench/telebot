@@ -26,6 +26,11 @@ type User struct {
 	SupportsInline       bool `json:"supports_inline_queries"`
 	CanConnectToBusiness bool `json:"can_connect_to_business"`
 	HasMainWebApp        bool `json:"has_main_web_app"`
+
+	// Bot API 9.3: True, if the user has topics enabled in their private chat
+	HasTopicsEnabled bool `json:"has_topics_enabled,omitempty"`
+	// Bot API 9.4: True, if the user allows creating topics in their private chat
+	AllowsUsersToCreateTopics bool `json:"allows_users_to_create_topics,omitempty"`
 }
 
 // Recipient returns user ID (see Recipient interface).
@@ -362,6 +367,45 @@ type ChatFullInfo struct {
 
 	// Bot API 8.3: True, if the chat can be gifted with Telegram Stars gifts
 	CanSendGift bool `json:"can_send_gift"`
+
+	// Bot API 9.0: Types of gifts accepted by the chat.
+	AcceptedGiftTypes *AcceptedGiftTypes `json:"accepted_gift_types,omitempty"`
+
+	// Bot API 9.2: True, if this is a channel's direct messages chat
+	IsDirectMessages bool `json:"is_direct_messages,omitempty"`
+
+	// Bot API 9.3: The number of Telegram Stars that must be paid to send a paid message to the chat
+	PaidMessageStarCount int `json:"paid_message_star_count,omitempty"`
+
+	// Bot API 9.3: Unique gift colors scheme used in the chat
+	UniqueGiftColors *UniqueGiftColors `json:"unique_gift_colors,omitempty"`
+
+	// Bot API 9.3: User rating in the channel (for channels only)
+	Rating *UserRating `json:"rating,omitempty"`
+
+	// Bot API 9.4: Info about the bot's first profile audio
+	FirstProfileAudio *Audio `json:"first_profile_audio,omitempty"`
+}
+
+// UserRating represents a user rating in a channel.
+type UserRating struct {
+	Rank       int `json:"rank"`
+	StarCount  int `json:"star_count"`
+	TotalCount int `json:"total_count"`
+}
+
+// UserProfileAudios represents a list of profile audios of a user.
+type UserProfileAudios struct {
+	TotalCount int     `json:"total_count"`
+	Audios     []Audio `json:"audios"`
+}
+
+// ChatOwnerLeft is a service message about the original channel creator leaving the linked discussion group.
+type ChatOwnerLeft struct{}
+
+// ChatOwnerChanged is a service message about the original channel creator being changed.
+type ChatOwnerChanged struct {
+	NewOwner *User `json:"new_owner"`
 }
 
 type ChatBackground struct {

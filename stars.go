@@ -1,6 +1,30 @@
 package telebot
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
+
+// StarAmount represents an amount of Telegram Stars (Bot API 9.0).
+type StarAmount struct {
+	Amount         int `json:"amount"`
+	NanostarAmount int `json:"nanostar_amount,omitempty"`
+}
+
+// GetMyStarBalance returns the current Telegram Stars balance of the bot.
+func (b *Bot) GetMyStarBalance() (*StarAmount, error) {
+	data, err := b.Raw("getMyStarBalance", nil)
+	if err != nil {
+		return nil, err
+	}
+	var resp struct {
+		Result *StarAmount
+	}
+	if err := json.Unmarshal(data, &resp); err != nil {
+		return nil, wrapError(err)
+	}
+	return resp.Result, nil
+}
 
 type TransactionType = string
 
@@ -77,6 +101,12 @@ type TransactionPartner struct {
 
 	// Bot API 8.3: Information about the chat transaction partner
 	Chat *TransactionPartnerChat `json:"chat,omitempty"`
+
+	// Bot API 9.0: Transaction type
+	TransactionType string `json:"transaction_type,omitempty"`
+
+	// Bot API 9.0: Premium subscription duration in months
+	PremiumSubscriptionDuration int `json:"premium_subscription_duration,omitempty"`
 }
 
 type RevenueWithdrawal struct {

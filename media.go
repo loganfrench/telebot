@@ -206,6 +206,14 @@ func (d *Document) InputMedia() InputMedia {
 	}
 }
 
+// VideoQuality represents the quality of a video (Bot API 9.4).
+type VideoQuality struct {
+	Type     string `json:"type"`
+	Width    int    `json:"width"`
+	Height   int    `json:"height"`
+	FileSize int    `json:"file_size,omitempty"`
+}
+
 // Video object represents a video file.
 type Video struct {
 	File
@@ -228,6 +236,9 @@ type Video struct {
 
 	// Bot API 8.3: (Optional) Point in time (Unix timestamp) when the video starts
 	StartTimestamp int64 `json:"start_timestamp,omitempty"`
+
+	// Bot API 9.4: (Optional) Available qualities of the video
+	Qualities []VideoQuality `json:"qualities,omitempty"`
 }
 
 func (v *Video) MediaType() string {

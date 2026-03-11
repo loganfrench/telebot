@@ -1423,6 +1423,30 @@ func (b *Bot) SetUserEmojiStatus(user Recipient, emojiStatusCustomEmojiID string
 	return err
 }
 
+// RemoveMyProfilePhoto removes the current profile photo of the bot (Bot API 9.4).
+func (b *Bot) RemoveMyProfilePhoto() error {
+	_, err := b.Raw("removeMyProfilePhoto", nil)
+	return err
+}
+
+// GetUserProfileAudios returns the list of profile audios for a user (Bot API 9.4).
+func (b *Bot) GetUserProfileAudios(user Recipient) (*UserProfileAudios, error) {
+	params := map[string]string{
+		"user_id": user.Recipient(),
+	}
+	data, err := b.Raw("getUserProfileAudios", params)
+	if err != nil {
+		return nil, err
+	}
+	var resp struct {
+		Result *UserProfileAudios
+	}
+	if err := json.Unmarshal(data, &resp); err != nil {
+		return nil, wrapError(err)
+	}
+	return resp.Result, nil
+}
+
 func extractEndpoint(endpoint interface{}) string {
 	switch end := endpoint.(type) {
 	case string:
