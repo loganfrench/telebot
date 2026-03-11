@@ -232,6 +232,35 @@ func (b *Bot) RefundStars(to Recipient, chargeID string) error {
 	return nil
 }
 
+// StarsSubscription contains information about a Telegram Stars subscription.
+type StarsSubscription struct {
+	UserID      string `json:"user_id"`
+	ChargeID    string `json:"charge_id"`
+	Amount      int    `json:"amount"`
+	Period      int    `json:"subscription_period"`
+	InvoiceSlug string `json:"invoice_slug"`
+	BotCanceled bool   `json:"bot_canceled"`
+	EndDate     int64  `json:"end_date"`
+}
+
+// CreateStarsSubscriptionInvoiceLink creates a link for a Telegram Stars subscription invoice.
+func (b *Bot) CreateStarsSubscriptionInvoiceLink(i Invoice) (string, error) {
+	params := i.params()
+	params["currency"] = Stars
+	params["subscription_period"] = strconv.Itoa(30 * 24 * 60 * 60) // 30 days
+	data, err := b.Raw("createInvoiceLink", params)
+	if err != nil {
+		return "", err
+	}
+	var resp struct {
+		Result string
+	}
+	if err := json.Unmarshal(data, &resp); err != nil {
+		return "", wrapError(err)
+	}
+	return resp.Result, nil
+}
+
 // EditUserStarSubscription allows the bot to cancel or re-enable extension of a subscription paid in Telegram Stars.
 func (b *Bot) EditUserStarSubscription(user Recipient, chargeID string, isCanceled bool) error {
 	params := map[string]string{
